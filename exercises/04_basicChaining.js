@@ -36,39 +36,16 @@ const writeFilePromise = util.promisify(fs.writeFile);
 const BASE_URL = 'https://koreanjson.com/users/';
 
 const fetchUsersAndWriteToFile = (readFilePath, writeFilePath) => {
-  // getDataFromFilePromise(readFilePath).then((data) => {
-  //   Promise.all(
-  //     data.map((number) => getBodyFromGetRequestPromise(BASE_URL + number))
-  //   ).then((nameData) => {
-  //     return writeFilePromise(
-  //       __dirname.slice(0, -10) + '/' + writeFilePath,
-  //       nameData
-  //     );
-  //   });
-  // });
-  // return Promise.all([
-  //   getDataFromFilePromise(readFilePath),
-  //   getBodyFromGetRequestPromise(BASE_URL),
-  // ]).then((data) => {
-  //   let arr = data[0];
-  //   console.log(arr);
-  //   let result = data[1];
-  //   // console.log(result);
-  //   writeFilePromise(writeFilePath, result.slice(0, arr.length));
-  // });
-
-  return getDataFromFilePromise(readFilePath).then((data) => {
-    return Promise.all(
-      data.map((ele) => getBodyFromGetRequestPromise(BASE_URL + ele))
+  return getDataFromFilePromise(readFilePath)
+    .then((data) =>
+      Promise.all(
+        data.map((ele) => getBodyFromGetRequestPromise(BASE_URL + ele))
+      )
     )
-      .then((data) => {
-        let names = data.map((ele) => ele.name);
-        return names.join('\n');
-      })
-      .then((names) => {
-        return writeFilePromise(writeFilePath, names + '\n');
-      });
-  });
+    .then((userList) => userList.map((ele) => ele.name).join('\n'))
+    .then((names) => {
+      return writeFilePromise(writeFilePath, names + '\n');
+    });
 };
 
 module.exports = {
