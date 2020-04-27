@@ -9,13 +9,13 @@
  * 새로 구현하지 마세요. 이전에 연습문제에서 export한 함수가 Promise를 리턴했던 것을 기억하세요!
  * Promse.all 함수를 사용해보세요.
  */
-const fs = require("fs");
-const util = require("util");
+const fs = require('fs');
+const util = require('util');
 
 const {
   getBodyFromGetRequestPromise,
-  getDataFromFilePromise
-} = require("../exercises/02_promiseConstructor");
+  getDataFromFilePromise,
+} = require('../exercises/02_promiseConstructor');
 
 const writeFilePromise = util.promisify(fs.writeFile);
 
@@ -33,10 +33,44 @@ const writeFilePromise = util.promisify(fs.writeFile);
  * https://koreanjson.com/users/3
  * */
 
-const BASE_URL = "https://koreanjson.com/users/";
+const BASE_URL = 'https://koreanjson.com/users/';
 
-const fetchUsersAndWriteToFile = (readFilePath, writeFilePath) => {};
+const fetchUsersAndWriteToFile = (readFilePath, writeFilePath) => {
+  // getDataFromFilePromise(readFilePath).then((data) => {
+  //   Promise.all(
+  //     data.map((number) => getBodyFromGetRequestPromise(BASE_URL + number))
+  //   ).then((nameData) => {
+  //     return writeFilePromise(
+  //       __dirname.slice(0, -10) + '/' + writeFilePath,
+  //       nameData
+  //     );
+  //   });
+  // });
+  // return Promise.all([
+  //   getDataFromFilePromise(readFilePath),
+  //   getBodyFromGetRequestPromise(BASE_URL),
+  // ]).then((data) => {
+  //   let arr = data[0];
+  //   console.log(arr);
+  //   let result = data[1];
+  //   // console.log(result);
+  //   writeFilePromise(writeFilePath, result.slice(0, arr.length));
+  // });
+
+  return getDataFromFilePromise(readFilePath).then((data) => {
+    return Promise.all(
+      data.map((ele) => getBodyFromGetRequestPromise(BASE_URL + ele))
+    )
+      .then((data) => {
+        let names = data.map((ele) => ele.name);
+        return names.join('\n');
+      })
+      .then((names) => {
+        return writeFilePromise(writeFilePath, names + '\n');
+      });
+  });
+};
 
 module.exports = {
-  fetchUsersAndWriteToFile
+  fetchUsersAndWriteToFile,
 };

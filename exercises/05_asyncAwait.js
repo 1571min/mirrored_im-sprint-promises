@@ -10,13 +10,13 @@
  * 새로 구현하지 마세요. 이전에 연습문제에서 export한 함수가 Promise를 리턴했던 것을 기억하세요!
  * Async & Awiat 를 Loop 안에서 어떻게 사용하는지 확인해보세요.
  */
-const fs = require("fs");
-const util = require("util");
+const fs = require('fs');
+const util = require('util');
 
 const {
   getBodyFromGetRequestPromise,
-  getDataFromFilePromise
-} = require("../exercises/02_promiseConstructor");
+  getDataFromFilePromise,
+} = require('../exercises/02_promiseConstructor');
 
 const writeFilePromise = util.promisify(fs.writeFile);
 
@@ -34,10 +34,19 @@ const writeFilePromise = util.promisify(fs.writeFile);
  * https://koreanjson.com/users/3
  * */
 
-const BASE_URL = "https://koreanjson.com/users/";
+const BASE_URL = 'https://koreanjson.com/users/';
 
-const fetchUsersAndWriteToFileAsync = async (readFilePath, writeFilePath) => {};
+const fetchUsersAndWriteToFileAsync = async (readFilePath, writeFilePath) => {
+  const arr = await getDataFromFilePromise(readFilePath);
+  console.log(arr);
+  let resultArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    const result = await getBodyFromGetRequestPromise(BASE_URL + arr[i]);
+    resultArr.push(result.name + '\n');
+  }
+  return writeFilePromise(writeFilePath, resultArr.join(''));
+};
 
 module.exports = {
-  fetchUsersAndWriteToFileAsync
+  fetchUsersAndWriteToFileAsync,
 };
