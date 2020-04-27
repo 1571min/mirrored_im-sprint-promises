@@ -38,7 +38,6 @@ const BASE_URL = 'https://koreanjson.com/users/';
 
 const fetchUsersAndWriteToFileAsync = async (readFilePath, writeFilePath) => {
   const arr = await getDataFromFilePromise(readFilePath);
-  console.log(arr);
   let resultArr = [];
   for (let i = 0; i < arr.length; i++) {
     const result = await getBodyFromGetRequestPromise(BASE_URL + arr[i]);

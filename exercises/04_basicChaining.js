@@ -43,9 +43,7 @@ const fetchUsersAndWriteToFile = (readFilePath, writeFilePath) => {
       )
     )
     .then((userList) => userList.map((ele) => ele.name).join('\n'))
-    .then((names) => {
-      return writeFilePromise(writeFilePath, names + '\n');
-    });
+    .then((names) => writeFilePromise(writeFilePath, names + '\n'));
 };
 
 module.exports = {
